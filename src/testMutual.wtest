@@ -1,0 +1,89 @@
+import mutual.*
+import socios.*
+
+describe "test 1" {
+	const viajePlaya = new ViajeDePlaya(idiomas =["Español"], largoPlaya = 1000)
+	const excursionCiudad = new ExcursionCiudad(idiomas =["Español"], atracciones = 4)
+	const ciudadTropical = new ExcursionCiudadTropical(idiomas =["Español"], atracciones = 8)
+	const trekking = new SalidaTrekking(idiomas =["Español"], kmSenderos = 100, diasDeSol = 130)
+	
+	test "viaje de playa"{
+		assert.equals(2, viajePlaya.dias())
+		assert.notThat(viajePlaya.implicaEsfuerzo())
+		assert.that(viajePlaya.sirveParaBroncearse())
+	}
+	test "excursion ciudad"{
+		assert.equals(2, excursionCiudad.dias())
+		assert.notThat(excursionCiudad.implicaEsfuerzo())
+		assert.notThat(excursionCiudad.sirveParaBroncearse())
+	}
+	test "excursion ciudad tropical"{
+		assert.equals(5, ciudadTropical.dias())
+		assert.that(ciudadTropical.implicaEsfuerzo())
+		assert.that(ciudadTropical.sirveParaBroncearse())
+	}
+	test "salida trekking"{
+		assert.equals(2, trekking.dias())
+		assert.that(trekking.implicaEsfuerzo())
+		assert.notThat(trekking.sirveParaBroncearse())
+	}
+}
+
+describe "test 2" {
+	const viajePlaya = new ViajeDePlaya(idiomas =["Español"], largoPlaya = 1000)
+	const excursionCiudad = new ExcursionCiudad(idiomas =["Español"], atracciones = 5)
+	const ciudadTropical = new ExcursionCiudadTropical(idiomas =["Español"], atracciones = 8)
+	const trekking = new SalidaTrekking(idiomas =["Español"], kmSenderos = 100, diasDeSol = 145)
+	const trekkingBilingue = new SalidaTrekking(idiomas =["Español", "Ingles", "Frances"], kmSenderos = 100, diasDeSol = 180)
+	
+	test "viaje de playa  no es interesante" {
+		assert.notThat(viajePlaya.esInteresante())
+	}
+	test "excursion ciudad es interesante" {
+		assert.that(excursionCiudad.esInteresante())
+	}
+	test "excursion tropical  no es interesante" {
+		assert.notThat(ciudadTropical.esInteresante())
+	}
+	test "salida trekking no es interesante"{
+		assert.notThat(trekking.esInteresante())
+	}
+	test "salida trekking es interesante"{
+		assert.that(trekkingBilingue.esInteresante())
+	}
+}
+
+describe "test 3"{
+	const gimnasia = new ClaseGimnasia()
+	test "clase normal de gimnasia"{
+		assert.equals(["Español"], gimnasia.idiomas())
+		assert.equals(1, gimnasia.dias())
+		assert.that(gimnasia.implicaEsfuerzo())
+		assert.notThat(gimnasia.sirveParaBroncearse())
+	}
+}
+
+describe "test 4"{
+	const viajePlaya = new ViajeDePlaya(idiomas =["Español"], largoPlaya = 2000)
+	const viajePlayaCorto = new ViajeDePlaya(idiomas =["Español"], largoPlaya = 1000)
+	const gimnasia = new ClaseGimnasia()
+	const actividadesRoque = [viajePlaya, viajePlayaCorto]
+	const roque = new Socio(edad=40,maximoActividades = 2, actividades = actividadesRoque,idiomas =["Español"])
+	const ana = new Socio(edad = 30,maximoActividades = 3, actividades = actividadesRoque, idiomas =["Español"])
+	
+	test "test roque(es adorador del sol, tiene una actividadEsforzadas, no puede realizar otra clase)"{
+		 assert.that(roque.esAdoradorDelSol())
+		 assert.equals([viajePlaya], roque.actividadesEsforzadas())
+		 assert.throwsException({roque.realizarActividad(gimnasia)})
+	}
+	test "test ana(puede realizar otra actividad, es adoradora del sol, actividades esforzada [viajeplaya])"{
+		 assert.that(ana.esAdoradorDelSol())
+		 assert.equals([viajePlaya], ana.actividadesEsforzadas())
+		 assert.notThat(ana.realizoMaximoActividades())
+	}
+	test "test 2 ana(realiza otra actividad, ya no adora el sol, y tiene dos actividades esfuerzo"{
+		 ana.realizarActividad(gimnasia)
+		 assert.notThat(ana.esAdoradorDelSol())
+		 assert.equals([viajePlaya, gimnasia], ana.actividadesEsforzadas())
+	}
+}
