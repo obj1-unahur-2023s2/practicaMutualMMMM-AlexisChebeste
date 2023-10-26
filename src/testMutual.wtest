@@ -66,7 +66,7 @@ describe "test 3"{
 describe "test 4"{
 	const viajePlaya = new ViajeDePlaya(idiomas =["Español"], largoPlaya = 2000)
 	const viajePlayaCorto = new ViajeDePlaya(idiomas =["Español"], largoPlaya = 1000)
-	const gimnasia = new ClaseGimnasia()
+	const clasegimnasia = new ClaseGimnasia()
 	const actividadesRoque = [viajePlaya, viajePlayaCorto]
 	const roque = new Socio(edad=40,maximoActividades = 2, actividades = actividadesRoque,idiomas =["Español"])
 	const ana = new Socio(edad = 30,maximoActividades = 3, actividades = actividadesRoque, idiomas =["Español"])
@@ -74,16 +74,68 @@ describe "test 4"{
 	test "test roque(es adorador del sol, tiene una actividadEsforzadas, no puede realizar otra clase)"{
 		 assert.that(roque.esAdoradorDelSol())
 		 assert.equals([viajePlaya], roque.actividadesEsforzadas())
-		 assert.throwsException({roque.realizarActividad(gimnasia)})
+		 assert.throwsException({roque.realizarActividad(clasegimnasia)})
 	}
-	test "test ana(puede realizar otra actividad, es adoradora del sol, actividades esforzada [viajeplaya])"{
+	test "test ana(puede realizar otra actividad, es adoradora del sol, actividades esforzada "{
 		 assert.that(ana.esAdoradorDelSol())
 		 assert.equals([viajePlaya], ana.actividadesEsforzadas())
 		 assert.notThat(ana.realizoMaximoActividades())
 	}
 	test "test 2 ana(realiza otra actividad, ya no adora el sol, y tiene dos actividades esfuerzo"{
-		 ana.realizarActividad(gimnasia)
+		 ana.realizarActividad(clasegimnasia)
 		 assert.notThat(ana.esAdoradorDelSol())
-		 assert.equals([viajePlaya, gimnasia], ana.actividadesEsforzadas())
+		 assert.equals([viajePlaya, clasegimnasia], ana.actividadesEsforzadas())
+	}
+}
+
+describe "test 5"{
+	const viajePlaya8dias = new ViajeDePlaya(idiomas =["Español"], largoPlaya = 4000)
+	const viajePlayaCorto = new ViajeDePlaya(idiomas =["Frances"], largoPlaya = 1000)
+	const clasegimnasia = new ClaseGimnasia()
+	const actividadesRoque = [viajePlaya8dias]
+	const actividadesJuan = [clasegimnasia]
+	const excursionACiudad = new ExcursionCiudad(idiomas =["Español","Frances"], atracciones = 6)
+	const ciudadTropical = new ExcursionCiudadTropical(idiomas =["Español"], atracciones = 8)
+	const pedro = new SocioTranquilo(edad=40,maximoActividades = 2, actividades = actividadesRoque,idiomas =["Español"])
+	const roberto = new SocioCoherente(edad = 30,maximoActividades = 3, actividades = actividadesRoque, idiomas =["Español"])
+	const juan = new SocioCoherente(edad = 23,maximoActividades = 6, actividades = actividadesJuan, idiomas =["Español"])
+	const martin = new SocioRelajado(edad = 28,maximoActividades = 3, actividades = actividadesRoque, idiomas =["Español", "Italiano"])
+	
+	
+	test "Al socio tranquilo, le atrae las actividades que lleve 4 dias o mas"{
+		assert.that(pedro.leAtrae(viajePlaya8dias))
+	}
+	test "Al socio tranquilo, no le atrae las actividades que lleve menos de 4 dias"{
+		assert.notThat(pedro.leAtrae(viajePlayaCorto))
+	}
+	test "Al socio coherente que es adorador del sol le atrae las actividades que sirve para broncearse"{
+		assert.that(roberto.leAtrae(ciudadTropical))
+	}
+	test "Al socio coherente que no es adorador del sol le atrae la actividad que implique esfuerzo"{
+		assert.that(juan.leAtrae(excursionACiudad))
+	}
+	test "Al socio relajado, le atrae las actividades en la que sepa hablar almenos un idioma que usa la actividad"{
+		assert.that(martin.leAtrae(viajePlaya8dias))
+	}
+	test "Al socio relajado, no le atrae las actividades en la que no sepa hablar un idioma que usa la actividad"{
+		assert.notThat(martin.leAtrae(viajePlayaCorto))
+	}
+}
+
+describe "test 6" {
+	const viajePlaya8dias = new ViajeDePlaya(idiomas =["Español", "Italiano"], largoPlaya = 4000)
+	const viajePlayaCorto = new ViajeDePlaya(idiomas =["Frances", "Portugues"], largoPlaya = 1000)
+	const gimnasia = new ClaseGimnasia()
+	const actividadesMartin = [viajePlayaCorto]
+	const martin = new SocioRelajado(edad = 33,maximoActividades = 3, actividades = actividadesMartin, idiomas =["Español", "Italiano"])
+
+	test "actividad recomendada para martin"{
+		assert.that(viajePlaya8dias.esRecomendadaParaSocio(martin))
+	}
+	test "la actividad no es recomendada para martin porque no es interesante"{
+		assert.notThat(viajePlayaCorto.esRecomendadaParaSocio(martin))
+	}
+	test "la actividad no es recomendada para martin porque es mayor de 30"{
+		assert.notThat(gimnasia.esRecomendadaParaSocio(martin))
 	}
 }

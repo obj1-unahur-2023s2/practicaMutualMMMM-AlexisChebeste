@@ -12,9 +12,11 @@ class Socio {
 		}
 		actividades.add(actividad)
 	} 
+	method actividades() = actividades
 	method esAdoradorDelSol() = actividades.all({a => a.sirveParaBroncearse()})
 	method actividadesEsforzadas() = actividades.filter({a => a.implicaEsfuerzo()})
 	method leAtrae(actividad) = false
+	
 }
 
 class SocioTranquilo inherits Socio{
@@ -26,8 +28,7 @@ class SocioCoherente inherits Socio{
 		var atrae = false
 		if(self.esAdoradorDelSol()){
 			atrae = actividad.sirveParaBroncearse()
-		}
-		else{
+		}else{
 			atrae = actividad.implicaEsfuerzo()
 		}
 		return atrae
@@ -35,7 +36,10 @@ class SocioCoherente inherits Socio{
 }
 
 class SocioRelajado inherits Socio{
+	override method leAtrae(actividad){
+		return actividad.idiomas().any({idioma => idiomas.any({idiom=> idiom == idioma})})
 	
+	}
 }
 
 

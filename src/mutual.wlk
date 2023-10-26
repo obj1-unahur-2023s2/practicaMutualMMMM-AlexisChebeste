@@ -4,7 +4,9 @@ class Viaje  {
 	method sirveParaBroncearse () = false
 	method dias()
 	method esInteresante() = idiomas.size() > 1
-	
+	method esRecomendadaParaSocio(socio){
+		return self.esInteresante() and socio.leAtrae(self) and !socio.actividades().any({a => a == self})
+	}
 }
 
 class ViajeDePlaya inherits Viaje {
@@ -39,11 +41,12 @@ class SalidaTrekking inherits Viaje {
 }
 
 class ClaseGimnasia  {
-	const idiomas = ["Español"]
-	method idiomas() = idiomas
+	
+	method idiomas() = ["Español"]
 	method dias() = 1
 	method implicaEsfuerzo() = true
 	method sirveParaBroncearse() = false
+	method esRecomendadaParaSocio(socio) = socio.edad().between(20,30)
 }
 
 
